@@ -8,7 +8,7 @@ Revolutionize your Marketing Department with a Cutting-Edge Web Application
 
 ### Team Members:
 
-* Hezekiah Oyemade
+* Hezekiah Oyemade [GitHub](https://github.com/oyedeyeye) | [LinkedIn](https://www.linkedin.com/in/hezekiah-oyemade/)
 
 ### Description of Project:
 Almost all companies need some form of image management due to the increasing importance of visual content in today’s digital landscape. Images play a crucial role in conveying a brand’s identity, message, and values to its target audience. The primary users of image management systems are creators, such as photographers and graphic designers, and marketing teams responsible for promoting the company’s products or services.
