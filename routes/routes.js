@@ -1,12 +1,17 @@
 const express = require('express')
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const db = require('../services/dbConnect');
-const uploadImage = require('./controllers/uploadImage')
-const persistImage = require('./controllers/persistImage');
-const deleteImage = require('./controllers/deleteImage');
-const updateImage = require('./controllers/updateImage');
-const retrieveImage = require('./controllers/retrieveImage');
+const uploadImage = require('./controllers/imageController/uploadImage')
+const persistImage = require('./controllers/imageController/persistImage');
+const deleteImage = require('./controllers/imageController/deleteImage');
+const updateImage = require('./controllers/imageController/updateImage');
+const retrieveImage = require('./controllers/imageController/retrieveImage');
+const createUser = require('./controllers/userController/createUser');
+const userLogin = require('./controllers/userController/login');
+const auth = require('./../controllers/authController');
 
 const router = express.Router();
 
@@ -28,24 +33,32 @@ router.get('/', (request, response, next) => {
 });
 
 
+/** Create User API  ============================================= */
+router.post('/create-user', async (request, response) => await createUser(request, response));
+
+
+/** Login User API  ============================================= */
+router.post('/login-user', async (request, response) => await userLogin(request, response));
+
+
 /** Upload API  ============================================= */
-router.post('/upload-image', async (request, response) => await uploadImage(request, response));
+router.post('/upload-image', auth, async (request, response) => await uploadImage(request, response));
 
 
 /** Upload and Persist Image API  ============================================= */
-router.post('/persist-image', async (request, response) => await persistImage(request, response));
+router.post('/persist-image', auth, async (request, response) => await persistImage(request, response));
 
 
 /** Retrieve an Image API ============================================= */
-router.get('/retrieve-image/:cloudinary_id', async (request, response) => await retrieveImage(request, response));
+router.get('/retrieve-image/:cloudinary_id', auth, async (request, response) => await retrieveImage(request, response));
 
 
 /** Delete an Image API  ============================================= */
-router.delete('/delete-image/:cloudinary_id', async (request, response) => await deleteImage(request, response));
+router.delete('/delete-image/:cloudinary_id', auth, async (request, response) => await deleteImage(request, response));
 
 
 /** Update Image API  ============================================= */
-router.put('/update-image/:cloudinary_id', async (request, response) => await updateImage(request, response));
+router.put('/update-image/:cloudinary_id', auth, async (request, response) => await updateImage(request, response));
 
 
 module.exports = router;

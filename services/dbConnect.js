@@ -110,24 +110,24 @@ const createTables = () => {
       role VARCHAR(128) NOT NULL,
       created_at TIMESTAMP DEFAULT NOW(),
       PRIMARY KEY(user_id)
+    );
+
+  -- const imageTable
+  CREATE TABLE IF NOT EXISTS
+    images_tabl(
+      id INT GENERATED ALWAYS AS IDENTITY,
+      title VARCHAR(128) NOT NULL,
+      cloudinary_id VARCHAR(128) NOT NULL,
+      image_url VARCHAR(128) NOT NULL,
+      creator INT,
+      created_at TIMESTAMP DEFAULT NOW(),
+      PRIMARY KEY(id),
+      CONSTRAINT fk_user
+        FOREIGN KEY(creator)
+          REFERENCES users(user_id)
+          ON DELETE SET NULL
     )`;
-
-  // -- const imageTable
-  // CREATE TABLE IF NOT EXISTS
-    // images_tabl(
-      // id INT GENERATED ALWAYS AS IDENTITY,
-      // title VARCHAR(128) NOT NULL,
-      // cloudinary_id VARCHAR(128) NOT NULL,
-      // image_url VARCHAR(128) NOT NULL,
-      // creator INT,
-      // created_at TIMESTAMP DEFAULT NOW(),
-      // PRIMARY KEY(id),
-      // CONSTRAINT fk_user
-        // FOREIGN KEY(creator)
-          // REFERENCES users(user_id)
-          // ON DELETE SET NULL
-    // )`;
-
+// 
   //  connectDB. 
   pool
   .query(dbTables)
