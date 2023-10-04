@@ -21,9 +21,10 @@ const createUser = async (request, response) => {
         message: 'All input is required!'
       });
     }
+
     // Check if user already exists
     // Validate user exist in the database
-    // const oldUser = 
+
     db.pool.connect((err, client) => {
       // Query
       const oldUserQuery = "SELECT * FROM users WHERE email = $1";
@@ -40,8 +41,10 @@ const createUser = async (request, response) => {
         }        
       });
     });
+
     // Encrypt user password
     encryptedPassword = await bcrypt.hash(password, 10);
+
     // Create User in our database
     db.pool.connect((err, client) => {
       // Query
@@ -60,23 +63,19 @@ const createUser = async (request, response) => {
         .then((result) => {
           console.log(result.rows[0]);
           const user = result.rows[0];
+
           // create signed JWT Token
           const token = jwt.sign(
             { user_id: user._id, email },
             process.env.TOKEN_KEY,
             { expiresIn: '8h' }
           );
+
           // save user token
           user.token = token;
 
           // return new user 
           return response.status(201).json(user);
-          // response.status(201).send({
-          //   status: 'success',
-          //   data: {
-          //     message: 'User Account Created Successfuly!'
-          //   },
-          // });
         })
         .catch((err) => {
           console.log(err);
