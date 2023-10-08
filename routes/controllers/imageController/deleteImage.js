@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require('../../services/dbConnect');
+const db = require('../../../services/dbConnect');
 const cloudinary = require('cloudinary').v2;
 
 
@@ -20,36 +20,38 @@ const deleteImage = async (request, response) => {
     resource_type: 'image',
     invalidate: true,
   })
-
-  // Then delete image record from postgres as well
-  .then(() => {
-    // response.status(200).send({
-    //   message: 'success',
-    //   result,
-    // });
-
+  .then((res) => {
+    console.log(res);
+    /*/ Then delete image record from postgres as well
     db.pool.connect((err, client) => {
       // Query
       const deleteQuery = "DELETE FROM images_tabl WHERE cloudinary_id = $1";
       const value = [cloudinary_id];
-    });
 
-    // Execute
-    client
-    .query(deleteQuery, value)
-    .then((result) => {
-      response.status(200).send({
-        message: 'Image Deleted Successfully!',
-        result,
-      });
+      // Execute
+      client
+        .query(deleteQuery, value)
+        .then((result) => {
+          response.status(200).send({
+            message: 'Image Deleted Successfully!',
+            result,
+          });
+        })
+        .catch((error) => {
+          response.status(500).send({
+            message: 'Image Could not be Deleted!',
+            error,
+          });
+        });
     })
-    .catch((error) => {
+    .catch((e) => {
       response.status(500).send({
-        message: 'Image Could not be Deleted!',
-        error,
+        message: 'failed',
+        e,
       });
     });
-  })
+  
+  */})
   .catch((err) => {
     response.status(500).send({
       message: 'failure',

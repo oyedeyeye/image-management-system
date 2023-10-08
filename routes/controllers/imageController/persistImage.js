@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require('../../services/dbConnect');
+const db = require('../../../services/dbConnect');
 const cloudinary = require('cloudinary').v2;
 
 
@@ -12,10 +12,12 @@ cloudinary.config({
 
 const persistImage = async (request, response) => {
   // upload image from a user ==========================
+  const { user_id } = request.body;
   const data = {
     title: request.body.title,
-    image: request.body.image
+    image: request.body.image,
   };
+  console.log(user_id);
 
   // cloudinary api
   cloudinary.uploader
@@ -26,9 +28,9 @@ const persistImage = async (request, response) => {
       console.log(JSON.stringify(image));
       db.pool.connect((err, client) => {
         // run a postgres query if upload to cloudinary is successful
-        const insertQuery = `INSERT INTO images_tabl (title, cloudinary_id, image_url)
-              VALUES($1,$2,$3) RETURNING *`;
-        const values = [data.title, image.public_id, image.secure_url];
+        const insertQuery = `INSERT INTO images_tabl (title, cloudinary_id, image_url, creator)
+              VALUES($1,$2,$3,$4) RETURNING *`;
+        const values = [data.title, image.public_id, image.secure_url, user_id];
 
         // executing the query
         client.query(insertQuery, values)
@@ -43,6 +45,7 @@ const persistImage = async (request, response) => {
                 title: result.title,
                 cloudinary_id: result.cloudinary_id,
                 image_url: result.image_url,
+                // creator: result.creator,
               },
             });
           }).catch((e) => {

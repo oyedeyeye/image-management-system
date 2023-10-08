@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require('../../services/dbConnect');
+const db = require('../../../services/dbConnect');
 const cloudinary = require('cloudinary').v2;
 
 
@@ -48,25 +48,25 @@ const updateImage = async (request, response) => {
             result.secure_url,
             cloudinary_id
           ];
-        });
 
-        // Execute
-        client
-        .query(updateQuery, value)
-        .then(() => {
+          // Execute
+          client
+          .query(updateQuery, value)
+          .then(() => {
 
-          // on success, send status message
-          response.status(201).send({
-            status: 'success',
-            data: {
-              message: "Image Updated Successfully!",
-            }
-          });
-        })
-        .catch((err) => {
-          response.status(500).send({
-            message: 'Update Failed',
-            err,
+            // on success, send status message
+            response.status(201).send({
+              status: 'success',
+              data: {
+                message: "Image Updated Successfully!",
+              }
+            });
+          })
+          .catch((err) => {
+            response.status(500).send({
+              message: 'Update Failed',
+              err,
+            });
           });
         });
       })
