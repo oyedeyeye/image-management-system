@@ -27,11 +27,12 @@ const userLogin = async (request, response) => {
       .query(userQuery, value)
       .then((result) => {
         const user = result.rows[0];
+        const userId = user.user_id;
         const comparePassword = bcrypt.compare(password, user.password);
         if ( user && comparePassword ) {
           // create jwt token
           const token = jwt.sign(
-            { user_id: user._id, email },
+            { user_id: user._id, userId },
             process.env.TOKEN_KEY,
             {
               expiresIn: '8h'

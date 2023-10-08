@@ -13,33 +13,37 @@ cloudinary.config({
 
 const retrieveImage = async (request, response) => {
   const { cloudinary_id } = request.params;
+  // const { user_id } = request.body;
+
 
   // Query the database
-  db.pool.connect((err, client) => {
+  await db.pool.connect((err, client) => {
     const idQuery = "SELECT * FROM images_tabl WHERE cloudinary_id = $1";
     const value = [cloudinary_id];
-  });
 
-  client
-    .query(idQuery, value)
-    .then((result) => {
-      response.status(200).send({
-        message: 'success',
+    client
+      .query(idQuery, value)
+      .then((result) => {
+        // console.log(result.rows[0]);
+        response.status(200).send({
+          message: 'success',
+          data: {
+            id: result.rows[0].cloudinary_id,
+            title: result.rows[0].title,
+            url: result.rows[0].image_url
+            // creator: result.rows[0].creator,
+          }
+        });
+      })
+      .catch((error) => {
+        response.status(401).send({
+        status: 'failure',
         data: {
-          id: result.rows[0].cloudinary_id,
-          title: result.rows[0].title,
-          url: result.rows[0].image_url,
-        },
+          message: 'Could not retrieve record!',
+          error,
+          },
+        });
       });
-    })
-    .catch((error) => {
-      response.status(401).send({
-      status: 'failure',
-      data: {
-        message: 'Could not retrieve record!',
-        error,
-      },
-    });
   });
 };
 

@@ -110,7 +110,7 @@ const createTables = () => {
       role VARCHAR(128) NOT NULL,
       created_at TIMESTAMP DEFAULT NOW(),
       PRIMARY KEY(user_id)
-    );
+    )
 
   -- const imageTable
   CREATE TABLE IF NOT EXISTS

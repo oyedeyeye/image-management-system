@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 const config = process.env;
 
-const verifyToken = (request, response, next) => {
+const authorization = (request, response, next) => {
   // Get token from request
   const token = request.body.token || request.query.token || request.headers['x-access-token'];
 
@@ -18,13 +19,12 @@ const verifyToken = (request, response, next) => {
   try {
     const decoded = jwt.verify(token, config.TOKEN_KEY);
     request.user = decoded;
-
+    return next();
   } catch (error) {
     return response.status(401).send({
       message: 'Invalid Token. Please login before you proceed with this action'
     });
   }
-  return next();
 };
 
-module.exports = verifyToken;
+module.exports = authorization;
